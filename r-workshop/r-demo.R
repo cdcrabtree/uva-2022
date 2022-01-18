@@ -23,7 +23,7 @@
 # if you have a Chromebook and are using rstudio cloud, then your working directory is basically just the cloud storage 
 # space and you don't have to run this step. 
 
-setwd("~/Dropbox/teaching/dartmouth/govt-10/slides/govt-10-winter-21/Class 2- R Tutorial")
+setwd("")
 
 # To run a command in R, place your cursor on the line of code and hit Ctrl + Enter in Windows or Cmd + Enter on a Mac.
 
