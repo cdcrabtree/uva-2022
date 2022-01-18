@@ -1,8 +1,50 @@
-#### R Workshop, University of Virginia 01/12/2020
-##################################################
+#### R Demo ####
 
-### Using R as a Calculator
-###########################
+# There are 4 panes: your source code (where you can type and save code), the console (where code is run), the 
+# files/plots pane (I usually leave this on the plots tab),  and the environment (where things are kept)
+# Go to RStudio > Preferences > Pane Layout.
+# You can change the panes to how you prefer or leave as is.
+
+# Use # to make a comment in R (a line of text that won't run as code). Get in the habit of carefully commenting your 
+# script so that it is easier for you and other people to understand later. 
+# Here's a good guide on code comments https://bookdown.org/ndphillips/YaRrr/a-brief-style-guide-commenting-and-spacing.html
+
+# when I add four #### at the end of a line, it creates a clickable subheading below ####
+
+# everyone try making a subheading now ####
+
+# This is an R script, i.e. a plain text file that allows you to write a lot of code at once and save for later. 
+# You can also write code directly into the console, but don't do this. The problem is that this code isn't saved, which can make it difficult (read: impossible) for you to recreate your work.
+
+#### Set your working directory ####
+# A working directory is a file path that lets R know where to look for files and data you reference and where to put 
+# any output you want to save (like a plot or new dataset that you created in R).
+
+# if you have a Chromebook and are using rstudio cloud, then your working directory is basically just the cloud storage 
+# space and you don't have to run this step. 
+
+setwd("~/Dropbox/teaching/dartmouth/govt-10/slides/govt-10-winter-21/Class 2- R Tutorial")
+
+# To run a command in R, place your cursor on the line of code and hit Ctrl + Enter in Windows or Cmd + Enter on a Mac.
+
+#### Load packages ####
+
+# Packages are extensions to R that enable additional functionality. 
+# R comes with many built-in functions, but the packages extend these functions. 
+# After you set the working directory and before you load your data, load the packages you need.
+
+### Load packages by calling them from the library.
+library(foreign)
+
+# If you've never used a package before, you may have to install it first:
+install.packages("library")
+install.packages("readstata13")
+library(readstata13)
+
+# Once you've installed a package, you never have to do it again! (Unless you need to update it.) To load the package, 
+# just use library(). You need to load libraries once in every new R session.
+
+#### Using R as a Calculator ####
 
 ## Try inputting the following commands. 
 ## After typing each line of code, hit the return key to display the results.
@@ -16,8 +58,7 @@ sqrt(2014)
 log(100, base=10)
 log(100, 10)
 
-### Using R to Generate Data
-############################
+#### Using R to Generate Data ####
 
 ## Let's generate a numeric vector.
 c(1, 2, 3, 4)
@@ -55,6 +96,7 @@ help(rep)
 ## When in trouble with R, use google, or post the problem to StackExchange (http://stackoverflow.com/questions/tagged/r)
 
 ## Now we know how to create data. We often want to reuse it. 
+## R is "object-oriented" meaning variables, data frames, models, outputs are all stored as objects in working memory. 
 ## So, we need to assign the data to variables. We use '<-' to do that. 
 ## Some people use '=', but this practice is discouraged.
 variable.name <- c(1, 2, 3)
@@ -92,8 +134,7 @@ head(random.numbers)
 ## . . . or the end of the vector.
 tail(random.numbers)
 
-### Using R for Data Management
-###############################
+#### Using R for Data Management ####
 
 ## Most often we do not create data in R, but use existing data sources. 
 ## There are many ways to do this. 
@@ -115,7 +156,7 @@ View()
 ## How do we view just the beginning of the data?
 
 ## Before importing other types of data (i.e. Excel and STATA files). 
-## We need to install additional packages for R. Think of packages like add-ons. 
+## We need to install additional packages for R. 
 ## R comes with many built-in functions, but the packages extend these functions. 
 
 ## For importing Excel files, we need the 'gdata' package.
@@ -146,16 +187,7 @@ View(data)
 police <- read.csv("https://raw.githubusercontent.com/BuzzFeedNews/2015-12-fatal-police-shootings/master/guardian.csv")
 View(police)
 
-## Or import data from a package. 
-library(devtools)
-install_github('jalapic/engsoccerdata', username = "jalapic")
-library(engsoccerdata)
-data(package="engsoccerdata")
-data("france")
-head(france)
-
-### Managing R's Workspace
-##########################
+#### Managing R's Workspace ####
 
 ## We have created a lot of variables and data frames. Let's talk about managing them.
 
@@ -166,7 +198,7 @@ ls()
 rm("data.csv")
 ls() 
 
-## Say we want to start our session with a clean slate, but we want to save data.dta first.
+## Say we want to start our session with a clean slate, but we want to save police first.
 save(police, file = "police.rda")
 
 ## Or maybe we want to save everything in the current environment.
@@ -177,11 +209,10 @@ rm(list = ls())
 ls() 
 
 ## This leaves libraries attached, however. Sometimes you might want to detach libraries.
-## One reason for this is because libraries can occassionally conflict.
+## One reason for this is because libraries can occasionally conflict.
 unloadNamespace("rio")
 
-### Exploring Data in R
-#######################
+#### Exploring Data in R ####
 
 ## Let's import some data again.
 justices <- read.csv("justices.csv")
@@ -199,7 +230,7 @@ dim(justices)[1]
 dim(justices)[2]
 summary(justices)
 
-## We can look at one variable.
+## We can look at one variable. To do this, we use the '$' operator
 justices$justiceName
 table(justices$justiceName)
 summary(justices$justiceName)
@@ -244,8 +275,7 @@ class(justices$justiceName)
 ## Or levels.
 levels(justices$justiceName)
 
-### Data Manipulation in R
-##########################
+#### Data Manipulation in R ####
 
 ## Let's create a new variable. 
 justices$new.post_mn <- justices$post_mn * 5
@@ -267,7 +297,7 @@ dim(police.new)
 summary(police.new)
 
 ## Maybe we only want data for judges with a post_mn greater than 0...
-justices.new <- subset(justices, post_mn > 0, select = c(term, justice, post_mn))
+justices.new <- subset(justices, post_mn > 0)
 dim(justices.new)
 summary(justices.new)
 
@@ -276,8 +306,7 @@ justices.new <- justices[, 2:4]
 dim(justices.new)
 summary(justices.new)
 
-### Basic Statistics in R
-#########################
+#### Basic Statistics in R ####
 
 ## Let's take the mean of a variable.
 mean(justices$post_mn)
@@ -305,12 +334,13 @@ data <- rio::import("justices.dta")
 View(data)
 cor(data$term, data$post_mn, method = c("spearman"))
 
-### Basic Graphics in R
-#######################
+#### Basic Graphics in R ####
 
-## Now let's create some basic graphics by examining data.dta$enps in greater detail
-hist(data$post_mn, col='slategray2', xlab="Ideology", ylab="Frequency", main="Histogram of Judicial Ideology", font.main = 1, border = "white")
-plot(density(data$post_mn), col='red', lwd=3, xlab="Ideology", ylab="Density", main="Kernel Density Plot of Ideology", font.main = 1, bty='n')
+## Now let's create some basic graphics by examining data$enps in greater detail
+hist(data$post_mn, col='slategray2', xlab="Ideology", ylab="Frequency", main="Histogram of Judicial Ideology", 
+     font.main = 1, border = "white")
+plot(density(data$post_mn), col='red', lwd=3, xlab="Ideology", ylab="Density", main="Kernel Density Plot of Ideology", 
+     font.main = 1, bty='n')
 
 ## What do col, lwd, xlab, ylab, main, font.main, and bty do?
 
@@ -330,8 +360,25 @@ mosaicplot(table(justices$justiceName))
 library(datasets)
 mosaicplot(Titanic, main = "Survival on the Titanic")
 
-### Basic Estimation in R
-#########################
+# try to save these plots
+
+#### Exercises ####
+
+# 1) What is the sum of 18, 10, 6, 1975, 813, and 111?
+  
+# 2) Create an object that stores the number you got for Question 1.
+
+# 3) Read in 'const-data.csv'.
+
+# 4) How is "totgr" distributed?
+  
+# 5) How many observations are in the data set from before the end of the Cold War.
+
+# 6) Plot some variable from 'const-data.csv'. Make a good looking plot, if you can.
+
+### EXTRA MATERIALS ###
+
+#### Basic Estimation in R ####
 
 ## We have some data, we've examined it, and we've plotted it.
 ## We might now want to test some hypotheses.
@@ -371,10 +418,7 @@ cool.plot <- cool.plot + theme_bw() + xlab("Coefficient Estimate") + ylab("") +
   theme(legend.position="none")
 print(cool.plot)
 
-## Let's take a few minutes to estimate a new regression using the Cox data and plot that.
-
-### Errata
-##########
+#### Errata ####
 
 ## We often want to make sure that our code replicates. One way that we can do this is with the source() command.
 source("file_name.r")
