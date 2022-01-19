@@ -23,7 +23,7 @@
 # if you have a Chromebook and are using rstudio cloud, then your working directory is basically just the cloud storage 
 # space and you don't have to run this step. 
 
-setwd("")
+setwd("~/Dropbox/git/uva-2022/r-workshop")
 
 # To run a command in R, place your cursor on the line of code and hit Ctrl + Enter in Windows or Cmd + Enter on a Mac.
 
@@ -62,7 +62,7 @@ log(100, 10)
 
 ## Let's generate a numeric vector.
 c(1, 2, 3, 4)
-1:4
+10:4000
 seq(1, 4)
 
 ## Let's create some more vectors.
@@ -129,10 +129,10 @@ random.numbers[500]
 random.numbers[900:920]
 
 ## Sometimes you want to view the beginning of the vector . . .
-head(random.numbers)
+head(random.numbers, 20)
 
 ## . . . or the end of the vector.
-tail(random.numbers)
+tail(random.numbers, 20)
 
 #### Using R for Data Management ####
 
@@ -147,13 +147,15 @@ getwd()
 list.files()
 
 ## Change your working directory to your data directory.
-setwd("")
+setwd("/Users/cdcrabtree/Dropbox/git/uva-2022/r-works")
 
 ## Let's import and view some data - first a .csv file.
 data.csv <- read.csv("justices.csv", header = TRUE, sep = ",",)
-View() 
+View(data.csv) 
 
 ## How do we view just the beginning of the data?
+head(data.csv)
+tail(data.csv)
 
 ## Before importing other types of data (i.e. Excel and STATA files). 
 ## We need to install additional packages for R. 
@@ -246,7 +248,7 @@ justices[1, 1]
 justices[2:3, 4:5]
 
 ## We can also use 'which' to look at specific observations.
-justices[which(justices$term > 2000), ]
+recent.df <- justices[which(justices$term > 2000), ]
 justices[which(justices$justice == 112), ]
 justices[which(justices$post_mn < 0), ]
 nrow(police[which(justices$post_mn < 0), ])
@@ -256,7 +258,9 @@ length(justices$term)
 
 ## Or to figure out the unique number of observations in a vector.
 length(unique(justices$term))
-length(unique(justices$judge))
+length(unique(justices$justiceName))
+
+justices$justiceName <- tolower(justices$justiceName)
 
 ## Or to order the observations in ascending or descending order.
 justices[order(justices$term), ]
@@ -264,13 +268,19 @@ justices[order(justices$term, decreasing=T),]
 
 ## Now we will use a new package to retrieve a different set of summary statistics. 
 ## We want to use the package 'Hmisc' - how do we install and load it?
+install.packages("Hmisc")
+library(Hmisc)
 describe(justices)
+
+NA
 
 ## Let's get some info about the variables in the dataset.
 str(justices)
 
 ## We can more directly view a variable's class.
 class(justices$justiceName)
+
+justices$justiceName <- as.character(justices$justiceName)
 
 ## Or levels.
 levels(justices$justiceName)
@@ -289,7 +299,7 @@ names(justices)
 ## Let's create a new dummy variable for all observations where justices have a post_mn greater than 0.
 justices$dummy <- 0
 justices$dummy[justices$post_mn > 0] <- 1
-sum(justices$dummy)
+table(justices$dummy)
 
 ## We can use the subset command to trim the data set as we like.
 justices.new <- subset(justices, select = c(term, justice, post_mn))

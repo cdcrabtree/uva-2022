@@ -25,6 +25,7 @@ setwd('~/Dropbox/cope-crabtree/text analysis course/2022/data/')
 load("state-constitutions.RData")
 
 # How many rows are there? How many columns? 
+dim(df.states)
 
 # What are the column names?
 
