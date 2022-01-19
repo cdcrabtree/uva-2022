@@ -6,8 +6,6 @@
 
 setwd('~/Dropbox/cope-crabtree/text analysis course/2022/data/')
 rm(list=ls())
-require(tm)
-require(matrixStats) # for statistics
 
 ## 1.2
 
@@ -21,13 +19,16 @@ library(quanteda)
 library(tidytext)
 library(tidyr)
 library(dplyr)
-install.packages("dplyr")
-data("data_corpus_inaugural")
+library(quanteda.textplots)
+library(tm)
+library(matrixStats) # for statistics
+
+data("data_corpus_inaugural") # loaded from quanteda
 
 inaug.td <- tidy(data_corpus_inaugural) # tidy text the corpus
 inaug.td
 summary(inaug.td)
-head(inaug.td$text)
+head(inaug.td$text, 2)
 
 inaug.words <- inaug.td %>% # convert the corpus to document-word
   unnest_tokens(word, text) %>%
@@ -82,16 +83,18 @@ token.info <- summary(data.corpus.inaugural.subset) # examine tokens
 plot(token.info$Year, token.info$Tokens, type = 'l')
 
 inaug.dfm <- dfm(data.corpus.inaugural.subset) # convert to dfm
-textplot_wordcloud(inaug.dfm) # create word cloud
+textplot_wordcloud(inaug.dfm) # create word cloud, using quanteda.textplots library
 
 kwic(data.corpus.inaugural.subset, pattern = "american") %>% # create lexical dispersion plot
   textplot_xray()
 
-textplot_xray( # create multiple lexicon dispersion plots
+textplot_xray( # create multiple lexicon dispersion plots, using quanteda.textplots library
   kwic(data.corpus.inaugural.subset, pattern = "american"),
   kwic(data.corpus.inaugural.subset, pattern = "people"),
   kwic(data.corpus.inaugural.subset, pattern = "freedom")
 )
+
+#### Pick up here on Thursday #####
 
 ## 2. Measuring "distinctiveness"
 
@@ -154,7 +157,7 @@ solelyobama <- solelyobama[order(solelyobama, decreasing = T)] # order them by f
 head(solelyobama, 10) # get top 10 words for obama
 notobama <- unlist(df[2, obama==0])
 notobama <- notobama[order(notobama, decreasing = T)] # order them by frequency
-head(notobama, 10) # get top 10 words for trump
+head(notobama, 10) # get top 10 words for not Obama
 
 ### 2.2 Removing unique words
 
